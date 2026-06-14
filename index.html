@@ -620,11 +620,6 @@ if __name__ == "__main__":
     </div>
   </div>
 
-  <!-- 第5章：歌詞を書く ②韻 -->
-  <div class="chapter">
-    <div class="chapter-title"><span class="ch-badge">第5章</span>歌詞を書く ②韻</div>
-  </div>
-
   <!-- 第6章：楽曲を生成する -->
   <div class="chapter">
     <div class="chapter-title"><span class="ch-badge">第6章</span>楽曲を生成する</div>
@@ -819,19 +814,82 @@ aggressive particle motion</code></pre>
     </div>
   </div>
 
-  <!-- 第7章：アートワーク -->
-  <div class="chapter">
-    <div class="chapter-title"><span class="ch-badge">第7章</span>アートワーク</div>
-  </div>
-
-  <!-- 第8章：動画を生成する -->
-  <div class="chapter">
-    <div class="chapter-title"><span class="ch-badge">第8章</span>動画を生成する</div>
-  </div>
-
   <!-- 第9章：実例 曹仁 -->
   <div class="chapter">
     <div class="chapter-title"><span class="ch-badge">第9章</span>実例: 曹仁「樊城の守り」</div>
+
+    <div class="acc-item" data-key="caoren-overview">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">🏯 作品概要</div>
+        <div class="acc-summary">曹仁の樊城籠城戦をテーマにした和風HIPHOP</div>
+      </div>
+      <div class="acc-body">
+        <p><strong>テーマ</strong>：曹仁の樊城（はんじょう）籠城戦（219年）。関羽の猛攻と洪水に囲まれながら城を守り抜く「不屈」の物語。</p>
+        <table class="compare-table">
+          <tr><th>項目</th><th>値</th></tr>
+          <tr><td>ジャンル</td><td>和風HIPHOP / ラップロック（攻め）</td></tr>
+          <tr><td>BPM</td><td>115</td></tr>
+          <tr><td>ボーカル</td><td>男性（50代・渋く力強い）</td></tr>
+          <tr><td>曲長</td><td>175秒（約2分55秒）</td></tr>
+          <tr><td>成果物</td><td>楽曲（mp3）/ 水墨画アートワーク（jpeg）/ 動画（mp4 1280×720）</td></tr>
+        </table>
+        <div class="tag-row">
+          <span class="tag tag-use">陰音階（マイナー）</span>
+          <span class="tag tag-use">和楽器アタック強調</span>
+          <span class="tag tag-use">低域補強</span>
+          <span class="tag tag-ex">完成版 v8</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="acc-item" data-key="caoren-iterate">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">🔄 制作ドキュメンタリー（失敗→修正の8回）</div>
+        <div class="acc-summary">発音問題・曲調劣化・非決定性との戦い</div>
+      </div>
+      <div class="acc-body">
+        <p>完成まで8回の試行錯誤があった。ここで得た学びが<strong>本教科書の各章</strong>に結実している。</p>
+        <h4>v1-v5：発音の罠との戦い</h4>
+        <ul>
+          <li><strong>造語の量産</strong>：「まいふせつ」「すがわだ」等、AIが勝手に存在しない語を生成 → <strong>漢字をそのまま渡さず、辞書で読みを確認</strong>する教訓（第4章）</li>
+          <li><strong>誤読</strong>：「不屈」を「ふこつ」と誤読 → 正しくは「ふくつ」 → 形態素解析でクロスチェック（第4章 kanji_to_hiragana.py）</li>
+        </ul>
+        <h4>v6：曲は完成、しかし発音が崩れる</h4>
+        <p>ビート・メロディ・構造は良好（Verse3回・172秒）。だが助詞「は」を「ha」と誤発音。「樊城<strong>は</strong>倒れぬ」が「樊城<strong>ha</strong>倒れぬ」に。</p>
+        <h4>v7：再生成で曲調が劣化</h4>
+        <p>「は→わ」を直して再生成したら、<strong>曲調まで変わってしまった</strong>。music-2.6 の<strong>非決定性</strong>（同じprompt+歌詞でも毎回違う結果）の壁。</p>
+        <h4>v8：music-cover で解決</h4>
+        <p>良い曲（v6）を <code>music-cover</code> で参照し、<strong>修正した歌詞（v7の正しい発音）だけを乗せ直す</strong>。結果：v6のビート/メロディ/構造を維持 + v7の正しい発音。175秒・v6との差はわずか3秒（第6章 music-cover手法）。</p>
+        <div class="tip-note"><strong>💡 最大の学び</strong>：発音ルールをどれだけ守っても問題は出る。重要なのは<strong>良い回を保存（preprocess）し、music-coverで歌詞だけ直す</strong>運用を覚えること。</div>
+      </div>
+    </div>
+
+    <div class="acc-item" data-key="caoren-takeaway">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">📝 成果物と学びのまとめ</div>
+        <div class="acc-summary">8回の試行錯誤から得たエッセンス</div>
+      </div>
+      <div class="acc-body">
+        <h4>3つの成果物</h4>
+        <ul>
+          <li><strong>楽曲</strong>：music-2.6 で生成。175秒・和風HIPHOP/ラップロック</li>
+          <li><strong>アートワーク</strong>：image-01 で水墨画を生成。男性武将のため花鈿問題は発生せず（第7章）</li>
+          <li><strong>動画</strong>：Hailuo I2V で水墨画を1280×720動画化（第8章）</li>
+        </ul>
+        <h4>他の武将で作る時の指針</h4>
+        <ol>
+          <li><strong>史実を読む</strong>（演義の回・正史の伝）→ テーマの軸を決める</li>
+          <li><strong>固有名詞マップを用意</strong>（第4章）→ 発音の罠を予防</li>
+          <li><strong>構造化prompt</strong>（第3章・第6章）→ ジャンル+BPM+音作りを指定</li>
+          <li><strong>良い回を保存</strong>→ music-cover で発音修正（第6章）</li>
+          <li><strong>アートワーク→動画</strong>（第7-8章）→ 世界観を視覚化</li>
+        </ol>
+        <div class="tip-note"><strong>⚔️ 次は君の番</strong>：本教科書の知見で、好きな武将のHIPHOPを作ってみてほしい。</div>
+      </div>
+    </div>
   </div>
 
   <div class="footer">
