@@ -412,6 +412,212 @@ body.light { --bg:#f8f9fa; --bg-raised:#fff; --bg-deep:#f1f3f5; --fg:#2d2d3f; --
   <!-- 第4章：歌詞を書く ①発音 -->
   <div class="chapter">
     <div class="chapter-title"><span class="ch-badge">第4章</span>歌詞を書く ①発音</div>
+
+    <div class="acc-item" data-key="pron-trap">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">⚠️ 漢字→発音の罠</div>
+        <div class="acc-summary">AIは漢字を読めない・助詞「は」を誤発音する</div>
+      </div>
+      <div class="acc-body">
+        <p>MiniMax music-2.6 に歌詞を渡すとき、<strong>漢字は使わず全てひらがな</strong>で書く。AIは漢字を正しく読めず、誤読・造語を量産する。</p>
+        <h4>★ 助詞「は」→「わ」（最優先・必須）</h4>
+        <p>AIは助詞「は」を <strong>「ha」</strong> と誤発音する。歌詞では全て「わ」と書く：</p>
+        <ul>
+          <li>「樊城は倒れぬ」→「はんじょう<strong>わ</strong> たおれぬ」</li>
+          <li>「曹仁は敗れぬ」→「そうじん<strong>わ</strong> やぶれぬ」</li>
+        </ul>
+        <div class="tip-note"><strong>※ 注意</strong>：名詞の一部の「は」（花=はな/始まり=はじまり）は変えない。<strong>助詞の「は」だけ「わ」</strong>。</div>
+        <h4>表記ルール</h4>
+        <ul>
+          <li><strong>「ー」（長音）</strong>：母音延長として扱う</li>
+          <li><strong>「ん」</strong>：母音 n として韻に使える</li>
+          <li><strong>ボーカル切替</strong>：<code>(F)</code>=女性/<code>(M)</code>=男性。デュオ時は括弧で明示</li>
+        </ul>
+        <h4>絶対禁止（失敗事例より）</h4>
+        <table class="compare-table">
+          <tr><th>失敗</th><th>原因</th><th>対策</th></tr>
+          <tr><td class="bad">造語（「まいふせつ」「すがわだ」）</td><td>適当にひらがな化</td><td class="good">辞書（janome）で読み確認</td></tr>
+          <tr><td class="bad">不屈=ふこつ（誤読）</td><td>辞書確認せず</td><td class="good">正：ふくつ</td></tr>
+          <tr><td class="bad">存在しない活用形「きたったのだ」</td><td>活用形誤り</td><td class="good">1行ずつ音読</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="acc-item" data-key="pron-kanji">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">🔤 「関羽=かんう」問題と固有名詞マップ</div>
+        <div class="acc-summary">janomeは固有名詞を形態素分割する</div>
+      </div>
+      <div class="acc-body">
+        <p>形態素解析器（janome 等）は、武将名などの固有名詞を<strong>勝手に分割</strong>して誤読する。</p>
+        <p><strong>例：関羽</strong> → 正しくは「かんう」だが、janomeは「せき + はね」等に分割してしまう。</p>
+        <h4>三国志固有名詞マップ（抜粋）</h4>
+        <table class="compare-table">
+          <tr><th>漢字</th><th>読み</th><th>区分</th></tr>
+          <tr><td>曹仁</td><td>そうじん</td><td>魏の武将</td></tr>
+          <tr><td>曹操</td><td>そうそう</td><td>魏</td></tr>
+          <tr><td>関羽</td><td>かんう</td><td>蜀の武将</td></tr>
+          <tr><td>張飛</td><td>ちょうひ</td><td>蜀</td></tr>
+          <tr><td>趙雲</td><td>ちょううん</td><td>蜀</td></tr>
+          <tr><td>諸葛亮</td><td>しょかつりょう</td><td>蜀</td></tr>
+          <tr><td>呂布</td><td>りょふ</td><td>群雄</td></tr>
+          <tr><td>周瑜</td><td>しゅうゆ</td><td>呉</td></tr>
+          <tr><td>司馬懿</td><td>しばい</td><td>魏</td></tr>
+          <tr><td>樊城</td><td>はんじょう</td><td>地名</td></tr>
+          <tr><td>赤壁</td><td>せきへき</td><td>地名</td></tr>
+          <tr><td>五丈原</td><td>ごじょうげん</td><td>地名</td></tr>
+        </table>
+        <div class="tip-note"><strong>💡</strong>：形態素解析は<strong>クロスチェックツールであって自動変換ではない</strong>。必ず人間が照合する。</div>
+      </div>
+    </div>
+
+    <div class="acc-item" data-key="pron-tool">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">🐍 kanji_to_hiragana.py（ツール配布）</div>
+        <div class="acc-summary">漢字歌詞→ひらがな 変換スクリプト</div>
+      </div>
+      <div class="acc-body">
+        <p>janome で一般語の読みを取得し、三国志固有名詞は手動マップで上書きするツール。<strong>正規表現で固有名詞を先に切り出して</strong>から処理することで、関羽→せき+はね問題を回避している。</p>
+        <h4>依存</h4>
+        <p><code>pip install janome</code></p>
+        <h4>コード</h4>
+        <pre><code>#!/usr/bin/env python3
+"""漢字歌詞 → 正しいひらがな歌詞 変換スクリプト."""
+import re
+from janome.tokenizer import Tokenizer
+
+# 三国志固有名詞の手動マップ（史実の日本語読み・カタカナ値）
+PROPER_NOUNS = {
+    "曹仁": "ソウジン", "樊城": "ハンジョウ", "関羽": "カンウ",
+    "于禁": "ウキン", "庞徳": "ホウトク", "徐晃": "ジョコウ",
+    "曹操": "ソウソウ", "蜀": "ショク", "魏": "ギ",
+    "劉備": "リュウビ", "諸葛亮": "ショカツリョウ", "孔明": "コウメイ",
+    "呂布": "リョフ", "張飛": "チョウヒ", "趙雲": "チョウウン",
+    "馬超": "バチョウ", "黄忠": "コウチュウ", "周瑜": "シュウユ",
+    "孫権": "ソンケン", "孫策": "ソンサク", "司馬懿": "シバイ",
+    "袁紹": "エンショウ", "董卓": "トウタク",
+    "銅雀台": "ドウジャクダイ", "赤壁": "セキヘキ",
+    "五丈原": "ゴジョウゲン", "官渡": "カント", "呉": "ゴ", "漢": "カン",
+}
+
+
+def kata_to_hira(kata: str) -> str:
+    """カタカナ→ひらがな."""
+    out = []
+    for c in kata:
+        if "ァ" &lt;= c &lt;= "ヴ":
+            out.append(chr(ord(c) - 0x60))
+        else:
+            out.append(c)
+    return "".join(out)
+
+
+def kanji_to_hiragana(text: str, tokenizer=None) -> str:
+    """text をひらがな化。固有名詞は正規表現で先分割してPROPER_NOUNSを直接適用。
+    （関羽→せき+はね問題の対策）"""
+    if tokenizer is None:
+        tokenizer = Tokenizer()
+    names = sorted(PROPER_NOUNS.keys(), key=len, reverse=True)
+    pattern = re.compile("(" + "|".join(re.escape(n) for n in names) + ")")
+    parts = pattern.split(text)
+    result_parts = []
+    for part in parts:
+        if not part:
+            continue
+        if part in PROPER_NOUNS:
+            result_parts.append(kata_to_hira(PROPER_NOUNS[part]))
+        else:
+            for tk in tokenizer.tokenize(part):
+                s = tk.surface
+                if tk.reading and tk.reading != "*":
+                    result_parts.append(kata_to_hira(tk.reading))
+                else:
+                    result_parts.append(s)
+    return "".join(result_parts)
+
+
+if __name__ == "__main__":
+    sample = "樊城の 嵐… 関羽の 軍が 迫る"
+    print(kanji_to_hiragana(sample))
+    # → はんじょうの あらし… かんうの ぐんが せまる</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第5章：歌詞を書く ②韻 -->
+  <div class="chapter">
+    <div class="chapter-title"><span class="ch-badge">第5章</span>歌詞を書く ②韻</div>
+
+    <div class="acc-item" data-key="rhyme-basic">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">🎵 韻＝母音を揃える</div>
+        <div class="acc-summary">日本語ラップは子音より母音</div>
+      </div>
+      <div class="acc-body">
+        <p>日本語ラップの韻は<strong>子音より母音</strong>。語尾の母音が揃えば韻になる。</p>
+        <pre><code>例:「そうじん」= s/o ー/o j/i n
+   「こうしん」= k/o ー/o sh/i n
+   → 母音列 [o-u-i-n] 完全一致 → 4字韻（複韻）</code></pre>
+        <div class="tip-note"><strong>AIへの応用</strong>：MiniMax music-2.6 は<strong>ひらがな表記の母音列</strong>しか読めない。歌詞をひらがなで書き、意図する母音列を揃えると、歌唱時に自然に韻が響く。</div>
+      </div>
+    </div>
+
+    <div class="acc-item" data-key="rhyme-types">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">📚 韻の種類・文字数・配置</div>
+        <div class="acc-summary">脚韻/頭韻・単韻〜複韻・連韻/交韻</div>
+      </div>
+      <div class="acc-body">
+        <h4>置く場所による分類</h4>
+        <table class="compare-table">
+          <tr><th>種類</th><th>場所</th><th>特徴</th></tr>
+          <tr><td><strong>脚韻</strong></td><td>行末尾</td><td>基本。聞き手が期待する着地点</td></tr>
+          <tr><td><strong>頭韻</strong></td><td>行先頭</td><td>脚韻と併用で強力</td></tr>
+          <tr><td><strong>内部韻</strong></td><td>行途中</td><td>flowに躍動感</td></tr>
+        </table>
+        <h4>文字数（王道は2〜4字）</h4>
+        <table class="compare-table">
+          <tr><th>呼び</th><th>文字数</th><th>例</th></tr>
+          <tr><td>単韻</td><td>1字</td><td>だ/な/か</td></tr>
+          <tr><td>2字韻</td><td>2字</td><td>そう/こう（o-u）</td></tr>
+          <tr><td>3字韻</td><td>3字</td><td>そうじ/こうし（o-u-i）</td></tr>
+          <tr><td>4字韻（複韻）</td><td>4字</td><td>そうじん/こうしん（o-u-i-n）</td></tr>
+        </table>
+        <h4>配置パターン</h4>
+        <ul>
+          <li><strong>連韻（AABB）</strong>：1=2 / 3=4 — 王道・安定</li>
+          <li><strong>交韻（ABAB）</strong>：1=3 / 2=4 — 流れる感覚</li>
+          <li><strong>階段韻（スタッキング）</strong>：3〜4行同韻連打 — 盛り上がり・サビ前</li>
+          <li><strong>バラ韻（飛び石）</strong>：離れた行で同韻 — 伏線・統一感</li>
+        </ul>
+        <div class="tip-note"><strong>完全韻 vs 母音韻（アソナンス）</strong>：完全韻は子音+母音一致。母音韻は母音のみ（子音は違ってOK）。完全韻が厳しい箇所は母音韻で緩く繋ぐ。</div>
+      </div>
+    </div>
+
+    <div class="acc-item" data-key="rhyme-sangoku">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">⚔️ 三国志語彙で韻を踏む</div>
+        <div class="acc-summary">作詞フローと実例</div>
+      </div>
+      <div class="acc-body">
+        <h4>作詞フロー（韻設計）</h4>
+        <ol>
+          <li><strong>テーマ語決定</strong>（曹仁→「そうじん」「はんじょう」「かんう」）</li>
+          <li><strong>韻の核（母音列）を逆算</strong>：「そうじん」= o-u-i-n</li>
+          <li><strong>同母音列の語をリスト</strong>（こうしん/とうしん/ろうしん/ほうしん…）</li>
+          <li><strong>意味が通るように並べる</strong>（韻優先で語を選ぶと意味が死ぬ→両立）</li>
+          <li><strong>脚韻を骨組み→頭韻/内部韻で肉付け</strong></li>
+          <li><strong>音数（モーラ）を行ごとに揃える</strong>（flow安定）</li>
+        </ol>
+        <div class="tip-note"><strong>💡 実例</strong>：曹仁の樊城籠城なら、「そうじん（o-u-i-n）」に「こうしん（行進）」「とうしん（当進）」等を重ねて、籠城の緊張感をビートで表現できる。</div>
+      </div>
+    </div>
   </div>
 
   <!-- 第5章：歌詞を書く ②韻 -->
