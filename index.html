@@ -628,6 +628,195 @@ if __name__ == "__main__":
   <!-- 第6章：楽曲を生成する -->
   <div class="chapter">
     <div class="chapter-title"><span class="ch-badge">第6章</span>楽曲を生成する</div>
+
+    <div class="acc-item" data-key="gen-prompt">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">🎹 MiniMax music-2.6 promptの書き方</div>
+        <div class="acc-summary">構造化フォーマットで精度UP</div>
+      </div>
+      <div class="acc-body">
+        <p>prompt（スタイル記述）は<strong>構造化フォーマット</strong>で書くと精度が上がる。</p>
+        <h4>構造化フォーマット</h4>
+        <pre><code>[ジャンル] / [サウンド特性] / [BPM] / [ボーカル] / [世界観] / [スケール] / [構造]</code></pre>
+        <h4>実例: 曹仁樊城v8 のprompt分解</h4>
+        <pre><code>Aggressive Japanese hip-hop / rap-rock            ← ジャンル
+heavy trap beats mixed with distorted electric guitar  ← 低域補強
+hard-hitting 808 drums around BPM 115            ← BPM＋低域
+deep gritty powerful male rap vocal in his 50s   ← ボーカル
+dark masculine warlord energy                    ← 世界観
+Chinese pentatonic motifs                         ← スケール
+anthemic hook chorus with back-up shouts         ← 構造</code></pre>
+        <div class="tip-note"><strong>💡</strong>：promptは<strong>英語</strong>の方が精度が高い傾向。構造タグ <code>[Verse 1][Chorus]</code> 等は公式14種を使用。</div>
+      </div>
+    </div>
+
+    <div class="acc-item" data-key="gen-sound">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">🎚️ サウンドデザイン（音作り）</div>
+        <div class="acc-summary">promptに音作り表現を盛り込む</div>
+      </div>
+      <div class="acc-body">
+        <p>promptに「音作り」の表現を盛り込むと生成品質が上がる。</p>
+        <h4>和楽器のアタック強調</h4>
+        <p>三味線・琵琶の速弾きにディレイ/リバーブを深くかけ、高音域の金属的アタックを空間配置。</p>
+        <pre><code>shamisen fast picking with deep reverb, metallic attack high frequencies</code></pre>
+        <h4>低域の補強</h4>
+        <p>ドロップチューニングのディストーションギターをベースラインと同期。</p>
+        <pre><code>drop-tuned distorted guitar synced with heavy bassline, thick bottom end</code></pre>
+        <h4>空間の遮断（フィルター）</h4>
+        <p>落ちサビ等でローパスフィルター（高音域カット）を適用、こもった音像で閉鎖空間演出。</p>
+        <pre><code>muffled lo-fi section with low-pass filter, underwater atmosphere</code></pre>
+        <h4>その他のテクニック</h4>
+        <ul>
+          <li><strong>サイドチェイン</strong>：キックでベース音量を下げ、うねり（ポンピング）を強調 <code>pumping sidechain bass with 808 kicks</code></li>
+          <li><strong>Lo-Fi質感</strong>：Vinyl Crackle / Wow & Flutter / レイドバック・グルーヴ <code>vinyl crackle, wow flutter tape texture, laid-back drums dragging slightly off-grid</code></li>
+          <li><strong>グリッチ・トランジション</strong>：テープストップ/デジタルエラーノイズでセクション接続 <code>tape stop transitions, digital glitch effects between sections</code></li>
+        </ul>
+        <h4>スケール指定（ジャンル別）</h4>
+        <table class="compare-table">
+          <tr><th>ジャンル系</th><th>スケール</th><th>prompt表現</th></tr>
+          <tr><td>和風HIPHOP（攻め）</td><td>陰音階（マイナー）</td><td><code>minor key, Japanese in scale, dark</code></td></tr>
+          <tr><td>和風（雅・叙事）</td><td>都節音階</td><td><code>miyako-bushi scale, traditional Japanese mode</code></td></tr>
+          <tr><td>中華風HIPHOP</td><td>ペンタトニック</td><td><code>Chinese pentatonic scale, guzheng motifs</code></td></tr>
+          <tr><td>和風Lofi</td><td>和風ペンタトニック</td><td><code>Japanese pentatonic, mellow, nostalgic</code></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="acc-item" data-key="gen-cover">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">🔁 music-cover手法（曲調維持＋歌詞修正）</div>
+        <div class="acc-summary">「曲は良いが発音だけ直したい」時の解法</div>
+      </div>
+      <div class="acc-body">
+        <p>music-2.6 は<strong>非決定的</strong>（同じprompt+歌詞でも毎回違う結果・seed指定不可）。歌詞を直して再生成すると<strong>曲調まで変わる</strong>。良い曲を活かして歌詞だけ直すには <code>music-cover</code> を使う。</p>
+        <h4>Step 1: preprocess（無料）— cover_feature_id 取得</h4>
+        <p>良い曲を base64 エンコードで POST すると、曲の音響特徴（<strong>24h有効</strong>）を取得。</p>
+        <h4>Step 2: cover 生成（有料・$0.15/曲）— 修正歌詞を適用</h4>
+        <pre><code>curl -X POST https://api.minimax.io/v1/music_generation \
+  -H "Authorization: Bearer $MINIMAX_API_KEY" \
+  -d "{\"model\":\"music-cover\",\"cover_feature_id\":\"<ID>\",\"lyrics\":\"<修正歌詞>\"}"</code></pre>
+        <div class="tip-note"><strong>💡</strong>：cover は<strong>直接API必須</strong>（MCP経由不可）。発音問題（は→わ等）を後から直したい時・良い曲調を逃したくない時に強力。</div>
+        <h4>よくある失敗パターン</h4>
+        <table class="compare-table">
+          <tr><th>症状</th><th>原因</th><th>対処</th></tr>
+          <tr><td class="bad">発音が崩れる</td><td>漢字誤読・助詞「は」</td><td class="good">第4章ルール適用→music-coverで修正</td></tr>
+          <tr><td class="bad">曲が短くなる</td><td>Verse圧縮</td><td class="good"><code>[Verse 1][Verse 2]</code> 番号付き</td></tr>
+          <tr><td class="bad">曲調が劣化</td><td>再生成の非決定性</td><td class="good">良い回をpreprocess保存</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第7章：アートワーク -->
+  <div class="chapter">
+    <div class="chapter-title"><span class="ch-badge">第7章</span>アートワーク</div>
+
+    <div class="acc-item" data-key="art-prompt">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">🖼️ 画像プロンプト構造化</div>
+        <div class="acc-summary">スタイル+被写体+環境+照明+構図</div>
+      </div>
+      <div class="acc-body">
+        <p>アートワーク生成のプロンプトも<strong>構造化フォーマット</strong>で書くと精度が上がる。</p>
+        <pre><code>[スタイル] + [被写体] + [環境/小物] + [照明/色] + [構図] --ar 16:9</code></pre>
+        <h4>実例: 曹仁樊城</h4>
+        <pre><code>Chinese ink wash painting, general Cao Ren on flooded walls,
+rain and storm clouds, dramatic lighting indigo and crimson,
+cinematic --ar 16:9</code></pre>
+        <p>武将の象徴シーンを選ぶ：曹仁なら籠城/関羽攻撃/洪水、関羽なら麦城、呂布なら虎牢関 等。</p>
+        <div class="tag-row">
+          <span class="tag tag-use">水墨画風（ink wash）</span>
+          <span class="tag tag-use">演劇的照明（dramatic lighting）</span>
+          <span class="tag tag-ex">--ar 16:9（ジャケット比率）</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="acc-item" data-key="art-huadian">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">🔴 花鈿（かでん）問題と除去</div>
+        <div class="acc-summary">AIが古代中国女性に強制付加する眉間の赤点</div>
+      </div>
+      <div class="acc-body">
+        <p><strong>花鈿（かでん/huadian）</strong>とは、古代中国の女性が眉間に施した赤い装飾。AI画像生成は<strong>古代中国女性を描く際、この花鈿を強制付加</strong>する傾向がある。</p>
+        <h4>なぜ問題か</h4>
+        <p>武将の妻・姫などの女性キャラを描く際、史実や構図に関わらず花鈿が乗ってしまう。アートワークとして不要な場合が多い。</p>
+        <h4>対策</h4>
+        <ul>
+          <li><strong>男性武将</strong>：花鈿は発生しない（曹仁等の男性武将なら問題なし）</li>
+          <li><strong>女性キャラで発生した場合</strong>：画像処理（inpainting・周辺ピクセルからの復元）で点だけを除去。表情・画質を維持したまま花鈿だけ消す</li>
+          <li><strong>予防</strong>：プロンプトに <code>no forehead mark, no huadian</code> 等のネガティブ指示を入れる（効果は限定的）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第8章：動画を生成する -->
+  <div class="chapter">
+    <div class="chapter-title"><span class="ch-badge">第8章</span>動画を生成する</div>
+
+    <div class="acc-item" data-key="vid-modes">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">🎬 FL2V / S2V / I2V の使い分け</div>
+        <div class="acc-summary">開始/終了帧・人物参照・静止画→動画</div>
+      </div>
+      <div class="acc-body">
+        <p>MiniMax Hailuo video 等の動画生成は、入力方式で3モードがある。</p>
+        <table class="compare-table">
+          <tr><th>モード</th><th>入力</th><th>向いてる用途</th></tr>
+          <tr><td><strong>FL2V</strong></td><td>開始帧+終了帧</td><td>2つの構図を繋ぐ変化</td></tr>
+          <tr><td><strong>S2V</strong></td><td>人物参照画像</td><td>特定キャラクターを動かす</td></tr>
+          <tr><td><strong>I2V</strong></td><td>静止画1枚</td><td>アートワークに動きを付ける（基本）</td></tr>
+        </table>
+        <div class="tip-note"><strong>💡</strong>：三国志アートワークを動画化するなら <strong>I2V</strong>（水墨画→緩やかな動き）が基本。最大10秒。15秒必要なら 10s+5s を2本生成して結合。</div>
+      </div>
+    </div>
+
+    <div class="acc-item" data-key="vid-motion">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">🎥 モーション指示</div>
+        <div class="acc-summary">静と動でプロンプトを使い分ける</div>
+      </div>
+      <div class="acc-body">
+        <p>楽曲の雰囲気に合わせて、動画の動き方（カメラワーク・粒子・遷移）を指示する。</p>
+        <h4>静（Lofi / 籠城 / Verse）</h4>
+        <pre><code>perfect loop, subtle swaying smoke, slow grain,
+no sudden camera movement</code></pre>
+        <h4>動（戦闘 / サビ / Chorus）</h4>
+        <pre><code>fast dynamic camera panning, ink transition effect,
+aggressive particle motion</code></pre>
+        <div class="tip-note"><strong>💡</strong>：水墨画アートワークなら <code>ink transition effect</code>（墨の滲みで遷移）が世界観に合う。</div>
+      </div>
+    </div>
+
+    <div class="acc-item" data-key="vid-tips">
+      <div class="acc-header" onclick="toggle(this)">
+        <span class="acc-icon">▶</span>
+        <div class="acc-title">⚙️ API利用のtips</div>
+        <div class="acc-summary">data URI・ポーリング・コスト管理</div>
+      </div>
+      <div class="acc-body">
+        <h4>first_frame_image は data URI 必須</h4>
+        <p>I2V で参照画像を渡す際、素の base64 だと <code>invalid image url</code> でrejectされる。<strong>data URI 形式</strong>（<code>data:image/jpeg;base64,...</code>）にすること。</p>
+        <h4>非同期ポーリング</h4>
+        <p>動画生成は非同期：<code>task_id</code> 返却 → ポーリングで完了を待つ。I2V 6秒動画で<strong>約2分20秒</strong>。</p>
+        <h4>コスト管理</h4>
+        <ul>
+          <li>Hailuo-2.3-Fast 768P 6s ≈ <strong>$0.19/本</strong>（従量）</li>
+          <li>定期プランの枠を使い切ったら、従量課金アカウントに切り替える運用で継続生成可能</li>
+          <li>テスト段階では短尺（6秒）で試し、良いものを長尺化する</li>
+        </ul>
+        <div class="tip-note"><strong>💡</strong>：動画APIは<strong>直接API呼び出し</strong>が前提（エンドポイント <code>/v1/video_generation</code>）。MCP経由でも可能だが、枠制限に当たった場合は直接API＋従量アカウントで回避。</div>
+      </div>
+    </div>
   </div>
 
   <!-- 第7章：アートワーク -->
