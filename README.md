@@ -23,3 +23,6 @@ https://fukukei23.github.io/sangoku-hiphop-guide/
 
 ## 出典
 `sangoku-song` スキル（claude-config repo・非公開）の制作ノウハウを外向きに再構成。
+
+## 関連（互補）
+- [AI作曲エンジン教科書](https://fukukei23.github.io/make-song-guide/) — 汎用作曲の理論体系（リファレンス型）。本書（三国志特化・チュートリアル型）と互补。
